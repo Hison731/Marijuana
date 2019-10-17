@@ -20,12 +20,12 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="post in posts" :key="post.id">
+            <tr v-for="(post, index) in posts" :key="post.id">
                 <td>{{ post.id }}</td>
                 <td>{{ post.title }}</td>
                 <td>{{ post.body }}</td>
                 <td><router-link :to="{name: 'edit', params: { id: post.id }}" class="btn btn-primary">Edit</router-link></td>
-                <td><button class="btn btn-danger">Delete</button></td>
+                <td><button class="btn btn-danger" @click.prevent="deletePost(post.id, index)">Delete</button></td>
             </tr>
             </tbody>
         </table>
@@ -44,6 +44,15 @@
             this.axios.get(uri).then(response => {
                 this.posts = response.data.data;
             });
+        },
+        methods: {
+            deletePost(id, index)
+            {
+                let uri = `http://localhost/api/post/delete/${id}`;
+                this.axios.delete(uri).then(response => {
+                    this.posts.splice(index, 1);
+                });
+            }
         }
     }
 </script>
